@@ -15,7 +15,7 @@ app.use(logger);
 app.use(express.urlencoded({ extended : true }))
 
 app.use("/", global)
-app.use("/video", videoRouter)
+app.use("/videos", videoRouter)
 app.use("/user", userRouter)
 
 const handelListening = () => 
