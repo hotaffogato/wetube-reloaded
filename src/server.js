@@ -12,11 +12,11 @@ app.set("view engine", "pug")
 app.set("views", process.cwd() + "/src/views")
 
 app.use(logger); 
-app.use(express.urlencoded({ extended : true }))
+app.use(express.urlencoded({ extended : true }));
 
-app.use("/", global)
-app.use("/videos", videoRouter)
-app.use("/user", userRouter)
+app.use("/", global);
+app.use("/videos", videoRouter);
+app.use("/user", userRouter);
 
 const handelListening = () => 
     console.log(`Server listening on port http://localhost:${PORT}`)

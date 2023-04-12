@@ -4,6 +4,12 @@ html(lang="ko")
         title Wetube | #{pageTitle}
         link(rel="stylesheet" href="https://unpkg.com/mvp.css")
     body 
-        h1=pageTitle 
-        block content 
+        header
+            h1=pageTitle 
+            nav
+                ul
+                    li 
+                        a(href="/videos/upload") Upload Video
+                        
+            block content 
     include partials/footer.pug
