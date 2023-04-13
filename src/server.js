@@ -5,7 +5,7 @@ import videoRouter from "./routers/videoRouter.js";
 import userRouter from "./routers/userRouter.js";
 
 const app = express()
-const PORT = 4000;
+
 const logger = morgan("dev")
 
 app.set("view engine", "pug")
@@ -18,8 +18,4 @@ app.use("/", global);
 app.use("/videos", videoRouter);
 app.use("/user", userRouter);
 
-const handelListening = () => 
-    console.log(`Server listening on port http://localhost:${PORT}`)
- 
-app.listen(PORT, handelListening)
-
+export default app;
