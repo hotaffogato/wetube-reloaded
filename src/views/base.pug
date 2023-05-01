@@ -9,11 +9,22 @@ html(lang="ko")
             nav
                 ul
                     li 
-                        a(href="/videos/upload") Upload Video
-                    li 
                         a(href="/") Home
                     li 
                         a(href="/search") Search
-                        
+                    
+                    if loggedIn 
+                        li
+                            a(href="/my-profile") #{loggedInUser.name} Profile
+                        li 
+                            a(href="/videos/upload") Upload Video
+                        li 
+                            a(href="/") Logout
+                    else
+                        li 
+                            a(href="/join") Join
+                        li 
+                            a(href="/login") Login
+
             block content 
         include partials/footer.pug

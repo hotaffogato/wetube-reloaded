@@ -3,7 +3,8 @@ include mixins/video
 
 block content 
     ul 
-        each info in videos 
-            +video(info)
+        if videos 
+            each info in videos 
+                +video(info)
         else
             li Sorry nothing found.
