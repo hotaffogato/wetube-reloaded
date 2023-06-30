@@ -3,7 +3,7 @@ include mixins/video
 
 block content 
     if(errorMessage)
-        div=errorMessage
+        h2 #{errorMessage}
     form(method="POST")
         input(name="name", type="text", placeholder="Name" required)
         input(name="email", type="email", placeholder="Email" required)

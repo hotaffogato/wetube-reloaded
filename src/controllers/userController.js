@@ -1,8 +1,7 @@
 import User from "../models/Users";
+import Video from "../models/Video";
 import bcrypt from "bcrypt";
 // import fetch from "node-fetch";
-
-export const see = (req, res) => res.send("User see");
 
 export const getJoin = (req, res) => {
     return res.render("join", {pageTitle: "Join"})
@@ -43,6 +42,7 @@ export const postJoin = async (req, res) => {
     }
     try {
         await User.create({name, username, email, password, location})
+        console.log("user create done")
         return res.render("login", {pageTitle: "Login"})
     } catch (e) {
         console.log("error : " + e)
@@ -54,11 +54,9 @@ export const postJoin = async (req, res) => {
             })
     }
 }
-
 export const getLogin = (req, res) => {
     return res.render("login", {pageTitle: "Login"})
 }
-
 export const postLogin = async (req, res) => {
     try {
         const {username, password} = req.body;
@@ -87,8 +85,10 @@ export const postLogin = async (req, res) => {
 
         req.session.loggedIn = true;
         req.session.user = user;
+        const videos = await Video.find({});
 
-        return res.redirect("/")
+        return res.redirect("/");
+        // return res.render("home", {pageTitle:"Home", videos})
 
     } catch (e) {
         console.log("error : " + e)
@@ -106,21 +106,20 @@ export const startGitLogin = (req, res) => {
     const finalUrl = `${baseUrl}?${params}`;
     return res.redirect(finalUrl);
 }
-
 export const gitFinish = async (req, res) => {
     const baseUrl = `https://github.com/login/oauth/access_token`;
     const config = {
         client_id: process.env.GH_CLIENT,
         client_secret: process.env.GH_SECRET,
-        code: req.query.code,
+        code: req.query.code
     };
     const params = new URLSearchParams(config).toString();
     const finalUrl = `${baseUrl}?${params}`;
     const tokenReq = await(await fetch(finalUrl, {
         method: "POST",
         headers: {
-            Accept: "application/json",
-        },
+            Accept: "application/json"
+        }
     })).json();
 
     if ("access_token" in tokenReq) {
@@ -129,13 +128,13 @@ export const gitFinish = async (req, res) => {
         const userData = await(await fetch(`${apiUrl}/user`, {
             headers: {
                 Authorization: `token ${access_token}`
-            },
+            }
         })).json();
         console.log(userData);
 
         const emailData = await(await fetch(`${apiUrl}/user/emails`, {
             headers: {
-                Authorization: `token ${access_token}`,
+                Authorization: `token ${access_token}`
             }
         })).json();
         console.log(emailData);
@@ -154,7 +153,7 @@ export const gitFinish = async (req, res) => {
                 email: emailObj.email,
                 password: "",
                 socialOnly: true,
-                location: userData.location,
+                location: userData.location
             });
         }
         req.session.loggedIn = true;
@@ -165,7 +164,6 @@ export const gitFinish = async (req, res) => {
         return res.redirect("/login")
     }
 }
-
 export const logout = (req, res) => {
     req
         .session
@@ -173,4 +171,72 @@ export const logout = (req, res) => {
     return res.redirect("/");
 }
 
-export const edit = (req, res) => res.send("Edit User");
+export const getUserEdit = (req, res) => {
+    return res.render("edit-profile", {pageTitle: "Edit Profile"})
+}
+
+export const postUserEdit = async (req, res) => {
+    const avatar = req.file;
+
+    const {
+        session: {
+            user: {
+                _id,
+                username: sessionUsername,
+                email: sessionEmail
+            }
+        },
+        body: {
+            name,
+            email,
+            username,
+            location
+        }
+    } = req;
+
+    console.log("req.file : " + req.file)
+    console.log("req.body : " + req.body)
+
+    let data = [];
+
+    if (sessionUsername != username) {
+        data.push({username})
+    }
+
+    if (sessionEmail != email) {
+        data.push({email})
+    }
+
+    if (avatar != null){
+        data.push({avatar})
+    }
+
+    if (data.length > 0) {
+        const exist = await User.findOne({$or: data});
+        if (exist) {
+            return res
+                .status(400)
+                .render("edit-profile", {
+                    pageTitle: "Edit Profile",
+                    errorMessage: "This username/email is alread taken."
+                })
+        }
+
+    }
+
+    const updateUser = await User.findByIdAndUpdate(_id, {
+        name,
+        email,
+        username,
+        location,
+        avatarUrl:avatar
+    }, {new: true});
+    req.session.user = updateUser;
+    return res.redirect("/user/my-profile")
+}
+
+export const myProfile = async(req, res) =>{
+    const { _id } = req.session.user
+    await User.findById({_id})
+    return res.render("myProfile", {pageTitle:"My Profile", avatar:""})
+}

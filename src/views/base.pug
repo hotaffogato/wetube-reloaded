@@ -13,9 +13,10 @@ html(lang="ko")
                     li 
                         a(href="/search") Search
                     
-                    if loggedIn 
+                    if loggedIn
+
                         li
-                            a(href="/my-profile") #{loggedInUser.name} Profile
+                            a(href="/user/my-profile") #{loggedInUser.name} Profile
                         li 
                             a(href="/videos/upload") Upload Video
                         li 
