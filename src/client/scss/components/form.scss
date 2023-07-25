@@ -24,12 +24,11 @@ input:not(input[type="range"]) {
     }
 }
 
-input[type="submit"],
+#submit,
 .social__btn {
     padding:12px 20px;
-    background-color: #fff;
-    color: rgba($color:$red,$alpha:1);
     text-align:center;
     cursor: pointer;
     display:block;
+    background-color: $red;
 }
