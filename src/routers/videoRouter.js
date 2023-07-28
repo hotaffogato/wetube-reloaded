@@ -18,10 +18,7 @@ videoRouter.route("/:id([0-9a-f]{24})/edit").all(protectMiddleware).get(deleteVi
 videoRouter.route("/upload")
     .all(protectMiddleware)
     .get(getUpload)
-    .post(uploadVideo.fields([
-        {name:"video", maxCount:1},
-        {name:"thumb", maxCount:1},
-    ]), 
+    .post(uploadVideo.single("video"), 
     postUpload
     );
 

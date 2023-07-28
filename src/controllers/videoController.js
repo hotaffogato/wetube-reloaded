@@ -55,14 +55,13 @@ export const getUpload = (req, res) => {
 export const postUpload = async(req, res) => {
     const {
         body:{ title, description, hashtags},
-        files:{video, thumb},
+        file:{path:fileUrl},
         session:{user:{_id}},
         } = req;
 
     try{
         const newVideo = await Video.create({
-            fileUrl:video[0].path,
-            thumbUrl:thumb[0].path,
+            fileUrl,
             title,
             description,
             owner:_id,
@@ -75,7 +74,8 @@ export const postUpload = async(req, res) => {
     } catch(error){
             console.log(error)
             return res.status(400).render("upload", { 
-            pageTitle:error, 
+            pageTitle:error,
+            errorMessage:error,
         })
     }
 }

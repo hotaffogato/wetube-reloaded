@@ -1,6 +1,6 @@
 mixin video(info)
     a(href=`/videos/${info.id}`).video-mixin
-        .video-mixin__thumb{style=`background-image:url(${info.thumbUrl});background-size:covor;background-position:center;}
+        .video-mixin__thumb
         .video-mixin__data
             span.video-mixin__title=info.title 
             .video-mixin__meta 
