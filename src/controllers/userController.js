@@ -1,7 +1,8 @@
 import User from "../models/Users";
-import Video from "../models/Video";
+import Comment from "../models/Comment";
 import bcrypt from "bcrypt";
-// import fetch from "node-fetch";
+
+//내가 쓴 댓글만 모아보기를 추가할 수 있다
 
 export const getJoin = (req, res) => {
     return res.render("join", {pageTitle: "Join"})
@@ -121,7 +122,8 @@ export const profile = async(req, res) =>{
     });
 }
 export const getEdit = (req, res) => {
-    return res.render("edit-profile", {pageTitle: "Edit Profile"})
+    const {user:{avatarUrl : avatar}} = req.session
+    return res.render("edit-profile", {pageTitle: "Edit Profile", avatar})
 
 }
 
@@ -171,5 +173,6 @@ export const postEdit = async (req, res) => {
         avatarUrl: file ? file.path : avatarUrl,
     }, {new: true});
     req.session.user = updateUser;
-    return res.redirect("/user/"+id)
+    req.flash("info","Your profile has been updated.")
+    return res.redirect("/user/" + id)
 }

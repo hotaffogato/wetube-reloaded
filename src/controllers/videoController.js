@@ -1,5 +1,6 @@
 import Video from "../models/Video"
 import User from "../models/Users"
+import Comment from "../models/Comment"
 
 export const home = async(req, res) => {
     const videos = await Video.find({})
@@ -76,20 +77,19 @@ export const postUpload = async(req, res) => {
             return res.status(400).render("upload", { 
             pageTitle:error,
             errorMessage:error,
-        })
+            })
     }
 }
 
 export const deleteVideo = async(req, res) => {
     const {id} = req.params;
-    const {user:{_id}} = req.session
+    const {user:{_id}}=req.session;
     const video = await Video.findById(id)
     if(!video){
-        return res.status(400).render("404",{pageTItle:"Video not found"})
+        return res.status(400).render("404",{pageTitle:"Video not found"})
     }
     if(String(video.owner) !== String(_id)){
-        console.log("not match")
-        return res.status(403).redirect("/")
+        return res.status(403).redirect("/",{errorMessage:"Owner is not match"})
     }
     await Video.findByIdAndDelete(id)
     return res.redirect("/")
@@ -117,4 +117,13 @@ export const registerView = async(req, res) => {
     video.meta.views = video.meta.views + 1;
     await video.save();
     return res.sendStatus(200)
+}
+
+export const postComment = () => {
+}
+
+export const getEditComment = () => {
+}
+
+export const postEditComment = () => {
 }

@@ -12,8 +12,7 @@ export const protectMiddleware = (req, res, next) => {
     if(req.session.loggedIn){
         next()
     } else {
-        req.flash("error", "Not authorized")
-        console.log("Middelware Massage : You are not logged in, move to Login")
+        req.flash("error", "You are not logged in, move to Login")
         return res.redirect("/login");
     }
 }
@@ -23,8 +22,7 @@ export const publicMiddleware = (req, res, next) => {
     if(!req.session.loggedIn){
         return next()
     } else {
-        req.flash("error", "Not authorized")
-        console.log("Middelware Massage : You already logged in, move to home")
+        req.flash("error", "You already logged in, move to home")
         return res.redirect("/")
     }
 }
