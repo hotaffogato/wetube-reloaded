@@ -10,4 +10,10 @@
             margin-bottom:10px;
         }
     }
+    .record__container {
+        & #preview, #startBtn {
+        display: block;
+        margin: auto auto 30px auto;
+        }
+    }
 }

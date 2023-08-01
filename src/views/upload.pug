@@ -2,7 +2,9 @@ extends base.pug
 
 block content
     div.upload__container
-        
+        div.record__container
+            video#preview
+            button#startBtn Start recording
         if(errorMessage) 
             h2 #{errorMessage}
 
@@ -15,3 +17,4 @@ block content
             input(type="submit", value="Upload Video")
     
 block scripts
+    script(src="/static/js/recorder.js")
