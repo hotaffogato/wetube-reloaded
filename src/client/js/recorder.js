@@ -21,6 +21,7 @@ const handleStop = () => {
   recorder.stop();
 }
 const handleStart = () => {
+  init();
   startBtn.innerText = "Stop Recording"
   startBtn.removeEventListener("click", handleStart)
   startBtn.addEventListener("click", handleStop)
@@ -43,10 +44,8 @@ const init = async () => {
     audio:false,
     video:true,
   })
-  video.srcObject = stream;
-  video.play();
+  // video.srcObject = stream;
+  // video.play();
 };
-
-init();
 
 startBtn.addEventListener("click", handleStart)

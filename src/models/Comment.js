@@ -7,6 +7,6 @@ const commentSchema = new mongoose.Schema({
   video:{type: mongoose.Schema.Types.ObjectId, ref: "Video" },
 });
 
-const commentModel = mongoose.model("Comment", commentSchema)
+const Comment = mongoose.model("Comment", commentSchema)
 
-export default commentModel;
+export default Comment;
