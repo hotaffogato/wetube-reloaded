@@ -1,4 +1,5 @@
 extends base.pug
+include mixins/comments
 
 block content
     if(errorMessage)
@@ -21,36 +22,30 @@ block content
             div
                 span#fullScreen
                     i.fas.fa-expand
-    div
-        small Uploaded by #{video.owner.username}
-        small=video.createdAt
-        p=video.description
-        p=video.hashtags
-        
-    div.owner__info
-        if String(video.owner._id) === String(loggedInUser._id)
-            a(href=`${video._id}/edit`) Edit Video &rarr;
-            br
-            a(href=`${video._id}/delete`) Delete Video &rarr;
+    div.video__info
+        span
+            img(src="/"+video.owner.avatarUrl)
+            small  #{video.owner.username}
+        span
+            small #{video.createdAt}
+            p=video.description
+            //- p=video.hashtags
+            if String(video.owner._id) === String(loggedInUser._id)
+                i.fas.fa-edit(href=`${video._id}/edit`)
+                i.fas.fa-trash(href=`${video._id}/delete`)
     
-    .video__comments
-        
+    
+    //- 댓글 구간
+    .video__comments    
         form.video__comments-form#commentForm
             textarea(placeholder="Leave a comment here!")
-            button Comment  
-        //
-            .comment__uploaded
-                if(comment)
-                #comment-user
-                    img(src="/"+avatarUrl)#comment-avatar
-                    span#comment-user user name
-                    span#comment-date  date
-                    if(owner)
-                        span#comment-edit.commentBtn edit
-                        span#comment-delete.commentBtn delete 
-                #comment-content comment content
-
+            button Comment
+        .video__commented
+            if comments
+                each comment in comments.reverse()
+                    +comments(comment) 
 
 block scripts 
     script(src="/static/js/videoPlayer.js")
-    script(src="/static/js/comment.js")
+    if(loggedIn)
+        script(src="/static/js/comment.js")

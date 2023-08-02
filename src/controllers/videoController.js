@@ -11,22 +11,32 @@ export const home = async(req, res) => {
 
 export const watch = async(req, res) => {
     const { id } = req.params
-    
-    const video = await Video.findById(id).populate({
+    const { _id } = req.session
+
+    //if(로그인 한 유저 === 댓글을 단 유저){
+    //  (req.session._id > OK) === (comment.owner.name > 검증필요)
+    //  코멘트 edit, del 키를 활성화 한다
+    //}
+
+    const video = await Video.findById(id).populate("owner").populate({
         path:"comments",
         populate:{
             path:"owner",
-            model:"User",
+            model:"User"
         }
     })
-
-    // console.log(video)
-
     if(!video){
-        console.log("video not found")
-        return res.status(404).render("404", {pageTitle:"Video not found"})
+        return res.status(404).render("404", {errorMessage:"Video not found"})
     }
-    return res.render("watch", { pageTitle: video.title, video });
+    console.log(video.comments)
+    return res.render(
+        "watch", { 
+            pageTitle: video.title, 
+            video,
+            _id,
+            comments:video.comments,
+         }
+    );
 }
 
 export const getEdit = async(req, res) => {
@@ -44,18 +54,22 @@ export const getEdit = async(req, res) => {
 }
 
 export const postEdit = async(req, res) => {
+    
     const { id } = req.params;
     const {user:{_id}} = req.session
     const { title, description, hashtags } = req.body;
     const video = await Video.findById(id);
+
     if (!video) {
         return res.status(404).render("404", {pageTItle:"Video not found."})
     }
+
     if(String(video.owner) !== String(_id)){
         console.log("not match")
         return res.status(403).redirect("/")
     }
-    await Video.findByIdAndUpdate(id, {title, description, hashtags : Video.formatHashtags(hashtags)})
+
+    await Video.findByIdAndUpdate( id , {title, description, hashtags : Video.formatHashtags(hashtags)})
     return res.redirect("/");
 }
 
@@ -94,7 +108,7 @@ export const postUpload = async(req, res) => {
 
 export const deleteVideo = async(req, res) => {
     const {id} = req.params;
-    const {user:{_id}}=req.session;
+    const {user:{_id}} = req.session;
     const video = await Video.findById(id)
     if(!video){
         return res.status(400).render("404",{pageTitle:"Video not found"})
@@ -130,7 +144,30 @@ export const registerView = async(req, res) => {
     return res.sendStatus(200)
 }
 
-export const postComment = () => {
+export const createComment = async (req, res) => {
+    const {
+        session:{user},
+        body:{content},
+        params:{id},
+    } = req;
+
+    const videoModel = await Video.findById(id);
+    const userModel = await User.findById(user._id);
+    
+    if(!videoModel || !userModel){
+        return res.sendStatus(404)
+    }
+    
+    const newComment = await Comment.create({
+        content,
+        owner : user._id,
+        video : id
+    })
+    videoModel.comments.push(newComment._id)
+    userModel.comments.push(newComment._id)
+    videoModel.save();
+    userModel.save();
+    return res.sendStatus(201);
 }
 
 export const getEditComment = () => {

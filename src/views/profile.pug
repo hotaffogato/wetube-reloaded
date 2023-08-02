@@ -7,8 +7,8 @@ block content
         h3=user.name
 
     div.video-grid
-        each video in user.videos
-            +video(video)
+        each video in videos
+            +videos(video)
         else 
             span.empty__message No videos found
     

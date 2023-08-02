@@ -1,12 +1,27 @@
+import { async } from "regenerator-runtime";
 const videoContainer = document.getElementById("videoContainer")
 const form = document.getElementById("commentForm");
-const textarea = form.querySelector("textarea");
-const btn = form.querySelector("button");
 
-const handleSubmit = (event) => {
+
+const handleSubmit = async (event) => {
   event.preventDefault();
-  const text = textarea.value
-  const video = videoContainer.dataset.id
+  const textarea = form.querySelector("textarea");
+  const content = textarea.value
+  if(content === ""){
+    return
+  }
+  textarea.value = ""
+
+  const videoId = videoContainer.dataset.id
+  await fetch(`/api/videos/${videoId}/comment`,{
+    method:"POST",
+    headers:{
+      "Content-Type": "application/json",
+    },
+    body:JSON.stringify({content})
+  })
 }
 
-form.addEventListener("submit", handleSubmit)
+if(form){
+    form.addEventListener("submit", handleSubmit)
+}

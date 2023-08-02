@@ -1,8 +1,8 @@
-mixin video(info)
-    a(href=`/videos/${info.id}`).video-mixin
+mixin videos(video)
+    a(href=`/videos/${video.id}`).video-mixin
         .video-mixin__thumb
         .video-mixin__data
-            span.video-mixin__title=info.title 
+            span.video-mixin__title=video.title 
             .video-mixin__meta 
-                span #{info.owner.name} • 
-                span #{info.meta.views} 회
+                span #{video.owner.name} • 
+                span #{video.meta.views} 회

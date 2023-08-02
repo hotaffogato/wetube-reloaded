@@ -20,6 +20,6 @@ userRouter
     .route("/:id/edit")
     .all(protectMiddleware)
     .get(getEdit)
-    .post(uploadImg.fields("avatar"), postEdit);
+    .post(uploadImg.single("avatar"), postEdit);
 
 export default userRouter;

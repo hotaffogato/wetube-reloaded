@@ -1,0 +1,10 @@
+mixin comments(comment)
+  .video__commented-area
+      #comment-user
+        img(src="/"+comment.owner.avatarUrl)#comment-avatar
+        span#comment-user #{comment.owner.name}
+        span#comment-date #{comment.createdAt}
+        //- if String(_id) == String(코멘트한 유저의 아이디)
+        i.fas.fa-edit#comment-edit
+        i.fas.fa-trash#comment-delete 
+      #comment-content #{comment.content}
