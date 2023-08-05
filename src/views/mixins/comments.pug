@@ -1,10 +1,13 @@
 mixin comments(comment)
-  .video__commented-area
-      #comment-user
-        img(src="/"+comment.owner.avatarUrl)#comment-avatar
-        span#comment-user #{comment.owner.name}
-        span#comment-date #{comment.createdAt}
-        //- if String(_id) == String(코멘트한 유저의 아이디)
-        i.fas.fa-edit#comment-edit
-        i.fas.fa-trash#comment-delete 
-      #comment-content #{comment.content}
+  .video__commented-detail
+    span.video__commented-left
+      img(src="/"+comment.owner.avatarUrl).comment-avatar
+      span.comment-user #{comment.owner.name}
+      span.comment-date #{comment.createdAt}
+    span.video__commented-right
+      if String(comment.owner.username) === String(loggedInUser.username)
+        //- a(href=`/videos/${id}/comment/${comment._id}/edit`)
+        //-   i.fas.fa-edit#comment-edit
+        a(href=`/api/videos/${comment.video._id}/comment/${comment._id}/delete`)
+          i.fas.fa-trash#comment-remove
+  .comment-content #{comment.content}

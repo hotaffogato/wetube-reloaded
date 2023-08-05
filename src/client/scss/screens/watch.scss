@@ -1,0 +1,134 @@
+.video__info {
+  margin: 5px auto 50px auto;
+  padding: 5px;
+  #video-title{
+    margin: 10px auto 20px auto;
+    font-size: 30px;
+  }
+  .video__owner {
+    display: flex;
+    margin: 10px auto;
+    justify-content: space-between;
+    .video__owner-left{
+      display: flex;
+      vertical-align: middle;
+      .video__owner-info{
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        #video__owner-name{
+          font-size: 24px;
+          font-weight: 600;
+        }
+        #video__owner-date{
+          font-size: 15px;
+          color: rgba(255,255,255,0.6);
+        }
+      }
+    }
+    img{
+      width: 50px;
+      height: 50px;
+      border-radius: 25px;
+    }
+  }
+  .video__owner-right{
+    i{
+      margin: 10px 5px;
+      cursor: pointer;
+    }
+  }
+  #description{
+    margin:5px;
+    padding:10px;
+  }
+}
+
+
+//comments area
+.video__comments{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 100px;
+  justify-content: center;
+  img{
+    margin: 12px;
+    width: 35px;
+    height:35px;
+    border-radius: 50%;
+  }
+  
+  form{
+    all: unset;
+    display: flex;
+    flex-grow: 0.9;
+    justify-content: space-around;
+    textarea{
+      margin-top: 18px;
+      height: 30px;
+      resize: none;
+      flex-grow: 0.9;
+      font-size: 16px;
+      font-weight: 600;
+      border:none;
+      color:#fff;
+      background-color: transparent;
+      border-bottom: 1px solid #fff;
+      &:focus{
+        border: none;
+        outline: none;
+        border-bottom: 1px solid #fff;
+      }
+    }
+    button{
+      background-color:#fff;
+      color:#000;
+      border-radius: 10px;
+      width: 100px;
+      cursor: pointer;
+    }
+  }
+}
+
+//commented area
+.video__commented{
+  width: 90%;
+  margin: auto;
+  padding-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  .video__commented-detail{
+    display: flex;
+    justify-content: space-between;
+    .video__commented-left{
+      align-items: center;
+      display: flex;
+      img{
+        margin: 5px 10px 5px 5px;
+        width: 30px;
+        height:30px;
+        border-radius: 15px;
+      }
+      .comment-user{
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .comment-date{
+        color:rgba(255,255,255,0.6);
+        margin-left: 10px;
+      }
+    }
+    .video__commented-right{
+      display: flex;
+      align-items: center;
+      i{
+        margin-left: 6px;
+      }
+    }
+  }
+  .comment-content{
+    margin: 10px auto 10px 15px;
+    padding-bottom: 20px;
+  }
+}

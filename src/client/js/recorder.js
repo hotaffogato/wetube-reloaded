@@ -1,4 +1,3 @@
-
 const startBtn = document.getElementById("startBtn")
 const video = document.getElementById("preview")
 
@@ -21,11 +20,10 @@ const handleStop = () => {
   recorder.stop();
 }
 const handleStart = () => {
-  init();
   startBtn.innerText = "Stop Recording"
   startBtn.removeEventListener("click", handleStart)
   startBtn.addEventListener("click", handleStop)
-
+  
   recorder = new MediaRecorder(stream,{mimeType:"video/webm"})
   recorder.ondataavailable = (event) => {
     //record 종료 후 실행되는 구간
@@ -44,8 +42,10 @@ const init = async () => {
     audio:false,
     video:true,
   })
-  // video.srcObject = stream;
-  // video.play();
+  video.srcObject = stream;
+  video.play();
 };
+
+init();
 
 startBtn.addEventListener("click", handleStart)

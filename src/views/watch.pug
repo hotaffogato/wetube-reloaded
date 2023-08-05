@@ -22,28 +22,39 @@ block content
             div
                 span#fullScreen
                     i.fas.fa-expand
-    div.video__info
-        span
-            img(src="/"+video.owner.avatarUrl)
-            small  #{video.owner.username}
-        span
-            small #{video.createdAt}
-            p=video.description
-            //- p=video.hashtags
+    .video__info
+        div#video-title #{video.title}
+        div.video__owner
+            span.video__owner-left
+                a(href=`/user/${video.owner._id}`)
+                    img(src="/"+video.owner.avatarUrl)#video__owner-avatar
+                span.video__owner-info
+                    span#video__owner-name #{video.owner.username}
+                    span#video__owner-date #{video.createdAt}
             if String(video.owner._id) === String(loggedInUser._id)
-                i.fas.fa-edit(href=`${video._id}/edit`)
-                i.fas.fa-trash(href=`${video._id}/delete`)
-    
+                span.video__owner-right
+                    a(href=`${video._id}/edit`)
+                        i.fas.fa-edit
+                    a(href=`${video._id}/delete`)
+                        i.fas.fa-trash
+        div#description #{video.description}
+        //- p=video.hashtags
+
     
     //- 댓글 구간
-    .video__comments    
+    .video__comments
+        if loggedIn
+            img(src="/"+loggedInUser.avatarUrl)
         form.video__comments-form#commentForm
-            textarea(placeholder="Leave a comment here!")
+            if loggedIn
+                textarea(placeholder="Leave a comment here!")
+            else
+                textarea(placeholder="Please log in to comment!")
             button Comment
-        .video__commented
-            if comments
-                each comment in comments.reverse()
-                    +comments(comment) 
+    .video__commented
+        if comments
+            each comment in comments.reverse()
+                +comments(comment) 
 
 block scripts 
     script(src="/static/js/videoPlayer.js")

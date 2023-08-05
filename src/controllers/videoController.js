@@ -1,6 +1,7 @@
 import Video from "../models/Video"
 import User from "../models/Users"
 import Comment from "../models/Comment"
+import { async } from "regenerator-runtime"
 
 export const home = async(req, res) => {
     const videos = await Video.find({})
@@ -11,13 +12,6 @@ export const home = async(req, res) => {
 
 export const watch = async(req, res) => {
     const { id } = req.params
-    const { _id } = req.session
-
-    //if(로그인 한 유저 === 댓글을 단 유저){
-    //  (req.session._id > OK) === (comment.owner.name > 검증필요)
-    //  코멘트 edit, del 키를 활성화 한다
-    //}
-
     const video = await Video.findById(id).populate("owner").populate({
         path:"comments",
         populate:{
@@ -28,17 +22,20 @@ export const watch = async(req, res) => {
     if(!video){
         return res.status(404).render("404", {errorMessage:"Video not found"})
     }
-    console.log(video.comments)
+    let loggedInUser
+    if(req.session.loggedIn){
+        loggedInUser = req.session.user
+    }
     return res.render(
         "watch", { 
             pageTitle: video.title, 
             video,
-            _id,
             comments:video.comments,
-         }
+            loggedInUser : loggedInUser ? loggedInUser : ""
+        }
     );
 }
-
+    
 export const getEdit = async(req, res) => {
     const { id } = req.params;
     const {user:{_id}} = req.session
@@ -68,9 +65,9 @@ export const postEdit = async(req, res) => {
         console.log("not match")
         return res.status(403).redirect("/")
     }
-
-    await Video.findByIdAndUpdate( id , {title, description, hashtags : Video.formatHashtags(hashtags)})
-    return res.redirect("/");
+    // const hashtags = Video.formatHashtags(hashtags)
+    await Video.findByIdAndUpdate( id , {title, description, })
+    return res.redirect(`/videos/${id}`);
 }
 
 export const getUpload = (req, res) => {
@@ -79,7 +76,7 @@ export const getUpload = (req, res) => {
 
 export const postUpload = async(req, res) => {
     const {
-        body:{ title, description, hashtags},
+        body:{ title, description,},
         session:{user:{_id}},
         } = req;
     const { video, thumb } = req.files
@@ -91,14 +88,14 @@ export const postUpload = async(req, res) => {
             title,
             description,
             owner:_id,
-            hashtags : Video.formatHashtags(hashtags)
+            // hashtags : Video.formatHashtags(hashtags)
         });
         const user = await User.findById(_id)
         user.videos.push(newVideo._id)
         user.save()
         return res.redirect("/")
+
     } catch(error){
-            console.log(error)
             return res.status(400).render("upload", { 
             pageTitle:error,
             errorMessage:error,
@@ -163,6 +160,7 @@ export const createComment = async (req, res) => {
         owner : user._id,
         video : id
     })
+
     videoModel.comments.push(newComment._id)
     userModel.comments.push(newComment._id)
     videoModel.save();
@@ -170,8 +168,18 @@ export const createComment = async (req, res) => {
     return res.sendStatus(201);
 }
 
-export const getEditComment = () => {
-}
+export const deleteComment = async (req, res) => {
+    const {
+        session:{user:{_id:id}}, 
+        params:{commentId, videoId}
+    } = req
+    const comment = await Comment.findById(commentId)
+    if(!comment || comment.owner.toString() !== id){
+        return res.sendStatus(400)
+    }
+    // await Comment.findByIdAndDelete(commentId)
+    console.log("delete comment from video model find to use commentId")
+    console.log("delete comment from user model find to use commentId")
 
-export const postEditComment = () => {
+    return res.status(200).redirect(`/videos/${videoId}`)
 }

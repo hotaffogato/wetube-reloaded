@@ -20,6 +20,7 @@
 @import "./screens/profile.scss";
 @import "./screens/upload.scss";
 @import "./screens/edit-profile.scss";
+@import "./screens/watch.scss";
 
 //defaults
 
@@ -39,4 +40,21 @@ main {
     width: 100%;
     margin: 0 auto;
     margin-top: 50px;
+}
+
+form{
+    input[type="file"]{
+        margin-bottom: 10px;
+    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    label{
+        margin: auto auto 10px 50px;
+        display: block;
+        height: 20px;
+        font-size: 18px;
+        font-weight: 550;
+
+    }
 }

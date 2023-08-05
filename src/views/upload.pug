@@ -9,14 +9,14 @@ block content
             h2 #{errorMessage}
 
         form(method="POST", enctype="multipart/form-data")
-            labal(for="video") Video File
+            label(for="video") Video File
             input(type="file", name="video", id="video", accept="video/*", required)
-            labal(for="thumb") Thumb File
+            label(for="thumb") Thumb File
             input(type="file", name="thumb", id="thumb", accept="image/*", required)
             input(name="title", placeholder="Title", type="text", maxlength=60, required)
             input(name="description", placeholder="Description", type="text", minlength=1, required)
-            input(name="hashtags", placeholder="Hashtags, separated by comma", type="text", required)
             input(type="submit", value="Upload Video")#submit
-    
+            //- input(name="hashtags", placeholder="Hashtags, separated by comma", type="text", required)
+
 block scripts
     script(src="/static/js/recorder.js")

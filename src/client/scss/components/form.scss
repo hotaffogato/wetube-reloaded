@@ -1,6 +1,6 @@
-form {
+form:not#commentForm {
     max-width: 420px;
-    margin:0 auto;
+    align-items: center;
     &:not(.search__form){
     padding: 30px;
     background-color: rgba($color:#000, $alpha:0.3);
