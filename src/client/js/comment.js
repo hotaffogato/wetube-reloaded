@@ -3,7 +3,6 @@ const form = document.getElementById("commentForm")
 
 const handleSubmit = async (event) => {
   event.preventDefault();
-  console.log(event.target)
   const textarea = form.querySelector("textarea");
   const content = textarea.value
   if(content === ""){
@@ -12,33 +11,41 @@ const handleSubmit = async (event) => {
   textarea.value = ""
   
   const videoId = videoContainer.dataset.id
-  const response = await fetch(`/api/videos/${videoId}/comment`,{
+  try{
+  await fetch(`/api/videos/${videoId}/comment`,{
     method:"POST",
     headers:{
       "Content-Type": "application/json",
     },
     body:JSON.stringify({content})
   })
-  console.log(response)
-  // window.location.reload();
+  } catch (error) {
+    console.log(error)
+  }
+  window.location.reload();
 }
 
-// const handleDelete = async (event) => {
-//   console.log("comment js handle delete is run")
-//   event.preventDefault();
-//   const {id : commentId} = event.target.dataset
-//   const videoId = videoContainer.dataset.id
-//   const response = await fetch(`/api/videos/${videoId}/comment/${commentId}/delete`,{
-//     method:"GET",
-//     headers:{
-//       "Content-Type": "application/json",
-//     },
-//   })
-//   console.log("response : ",response)
-//   // window.location.reload()
-// }
+const commentRemove = document.getElementById("comment-remove")
+const handleRemove = async (event) => {
+  event.preventDefault()
+  const {commentid:commentId, videoid:videoId} = event.target.dataset
+  if(event.target === commentRemove){
+    try{
+      await fetch(`/api/videos/${videoId}/comment/${commentId}/delete`,{
+      method:"DELETE",
+      headers:{
+        "Content-Type": "application/json",  
+      },
+    })
+    } catch (error) {
+      console.log(error)
+    }
+    window.location.reload();
+  }
+}
 
-// const deleteCommentBtn = document.getElementById("comment-remove")
-// deleteCommentBtn.addEventListener("click", handleDelete)
+if(commentRemove){
+  commentRemove.addEventListener("click", handleRemove)
+}
 
 form.addEventListener("submit", handleSubmit)

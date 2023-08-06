@@ -177,9 +177,12 @@ export const deleteComment = async (req, res) => {
     if(!comment || comment.owner.toString() !== id){
         return res.sendStatus(400)
     }
-    // await Comment.findByIdAndDelete(commentId)
-    console.log("delete comment from video model find to use commentId")
-    console.log("delete comment from user model find to use commentId")
-
-    return res.status(200).redirect(`/videos/${videoId}`)
+    try{
+    await Comment.findByIdAndDelete(commentId)
+    await User.updateOne({ comments: commentId }, { $pull: { comments: commentId } });
+    await Video.updateOne({ comments: commentId }, { $pull: { comments: commentId } });
+    } catch(error){
+        return res.render("404", {errorMessage:error} )
+    }
+    return res.sendStatus(200)
 }

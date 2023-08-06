@@ -6,8 +6,7 @@ mixin comments(comment)
       span.comment-date #{comment.createdAt}
     span.video__commented-right
       if String(comment.owner.username) === String(loggedInUser.username)
-        //- a(href=`/videos/${id}/comment/${comment._id}/edit`)
+        //- a(href=`/api/videos/${id}/comment/${comment._id}/edit`)
         //-   i.fas.fa-edit#comment-edit
-        a(href=`/api/videos/${comment.video._id}/comment/${comment._id}/delete`)
-          i.fas.fa-trash#comment-remove
+        i.fas.fa-trash#comment-remove(data-commentId=comment._id, data-videoId=comment.video._id)
   .comment-content #{comment.content}
